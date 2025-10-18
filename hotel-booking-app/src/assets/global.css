@@ -1,0 +1,343 @@
+/* Global Styles */
+body {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Steps Card (used on all pages) */
+.steps-card {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Circle number */
+.step-number {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #000;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #fff;
+    font-size: 14px;
+}
+
+/* Step label */
+.step-label {
+    font-size: 14px;
+}
+
+.step.completed .step-number,
+.step.completed .step-label {
+    border-color: #000;
+    color: #000;
+}
+
+.step.active .step-number,
+.step.active .step-label {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.step.disabled .step-number {
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #888;
+}
+
+.step.disabled .step-label {
+    color: #888;
+}
+
+/* Page Headers */
+.page-header {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.page-header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Room Search Page */
+.room-search-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.room-search-page input,
+.room-search-page select {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.room-search-page button {
+    margin-top: 3rem;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.room-search-page button:hover {
+    background-color: #555;
+}
+
+/* Rooms Listing Page */
+.rooms-page, .contact-page {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.rooms-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.room-card {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    transition: box-shadow 0.3s;
+}
+
+.room-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.room-image {
+    width: 40%;
+    object-fit: cover;
+}
+
+.room-details {
+    padding: 20px;
+    flex: 1;
+}
+
+.room-details h2, .room-info h3 {
+    margin: 0 0 10px;
+}
+
+.room-details p, .room-info p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.room-price {
+    font-weight: bold;
+    color: #000;
+}
+
+.select-btn, .submit-btn, .home-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.select-btn:hover, .submit-btn:hover, .home-btn:hover {
+    background-color: #555;
+}
+
+/* Contact Page Two-column layout */
+.content {
+    display: flex;
+    gap: 20px;
+}
+
+.contact-form {
+    flex: 2;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.room-summary {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Confirmation Page */
+.confirmation-page {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.confirmation-message {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.summary-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.contact-info p {
+    margin: 5px 0;
+}
+
+/* Dashboard Page */
+.dashboard-page {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.dashboard-header p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Quick Actions */
+.dashboard-actions {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.action-card {
+    background-color: #f8f8f8;
+    padding: 20px;
+    flex: 1 1 250px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.action-card h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.action-card p {
+    color: #555;
+}
+
+/* Recent Bookings */
+.recent-bookings h2 {
+    margin-bottom: 15px;
+}
+
+.booking-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+
+.no-bookings {
+    color: #888;
+    font-size: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .room-card, .room-summary, .summary-card, .booking-card {
+        flex-direction: column;
+        align-items: center;
+    }
+    .room-card img, .booking-card img {
+        width: 100%;
+        max-width: 300px;
+    }
+    .content {
+        flex-direction: column;
+    }
+    .steps-card {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .dashboard-actions {
+        flex-direction: column;
+    }
+}
