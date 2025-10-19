@@ -20,33 +20,8 @@
       </div>
     </div>
 
-    <!-- Choose Login or Guest -->
-    <div v-if="!showForm" class="login-guest-options">
-      <h2>Welcome!</h2>
-      <p>Please choose an option to continue:</p>
-      <button class="option-btn" @click="showLogin = true">Login</button>
-      <button class="option-btn" @click="startGuest">Continue as Guest</button>
-    </div>
-
-    <!-- Login Form -->
-    <section v-if="showLogin && !showForm" class="contact-form">
-      <h3>Login</h3>
-      <form @submit.prevent="loginUser">
-        <div class="form-group">
-          <label for="emailLogin">Email</label>
-          <input type="email" id="emailLogin" v-model="login.email" required />
-        </div>
-        <div class="form-group">
-          <label for="passwordLogin">Password</label>
-          <input type="password" id="passwordLogin" v-model="login.password" required />
-        </div>
-        <button type="submit" class="submit-btn" style="margin-right: 1rem">LOGIN</button>
-        <button type="button" class="submit-btn" @click="showLogin = false">Back</button>
-      </form>
-    </section>
-
     <!-- Contact Form -->
-    <section v-if="showForm" class="content">
+    <section class="content">
       <!-- Left: Contact Form -->
       <div class="contact-form">
         <form @submit.prevent="submitContact">
@@ -71,6 +46,16 @@
             <input type="email" id="email" v-model="contact.email" required />
           </div>
 
+          <div class="form-group">
+            <label for="check_in">Check-in Date</label>
+            <input type="date" id="check_in" v-model="contact.check_in" required />
+          </div>
+
+          <div class="form-group">
+            <label for="check_out">Check-out Date</label>
+            <input type="date" id="check_out" v-model="contact.check_out" required />
+          </div>
+
           <button type="submit" class="submit-btn">PROCEED</button>
         </form>
       </div>
@@ -79,11 +64,21 @@
       <aside class="room-summary">
         <h2>Selected Room</h2>
         <div class="room-card">
-          <img :src="selectedRoom.image" alt="Room Image" />
+          <img
+              :src="getRoomImage(selectedRoom.image)"
+              alt="Room Image"
+              class="room-image"
+          />
           <div class="room-info">
             <h3>{{ selectedRoom.name }}</h3>
             <p>{{ selectedRoom.description }}</p>
             <p class="room-price">LKR {{ selectedRoom.price }}/night</p>
+
+            <!-- Show Check-in & Check-out Dates -->
+            <div v-if="contact.check_in && contact.check_out" class="room-dates">
+              <p><strong>Check-in:</strong> {{ contact.check_in }}</p>
+              <p><strong>Check-out:</strong> {{ contact.check_out }}</p>
+            </div>
           </div>
         </div>
       </aside>
@@ -92,86 +87,154 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "ContactInfo",
   data() {
     return {
-      showForm: false,
-      showLogin: false,
-      login: {
-        email: "",
-        password: "",
-      },
       contact: {
         title: "",
         name: "",
         email: "",
+        check_in: "",
+        check_out: "",
       },
       selectedRoom: {
-        id: 1,
-        name: "Deluxe Room",
-        description: "Spacious room with sea view and king-size bed.",
-        price: 120,
-        image: "/assets/rooms/room1.jpg",
+        id: null,
+        name: "",
+        description: "",
+        price: null,
+        image: "",
       },
     };
   },
+  mounted() {
+    // Load selected room from router query
+    this.selectedRoom = {
+      id: this.$route.query.id,
+      name: this.$route.query.name,
+      description: this.$route.query.description,
+      price: this.$route.query.price,
+      image: this.$route.query.image,
+    };
+  },
   methods: {
-    startGuest() {
-      this.showForm = true;
-    },
-    loginUser() {
-      // Mock login (replace with your API call)
-      if (this.login.email && this.login.password) {
-        // Example: prefill contact info after login
-        this.contact.title = "Mr.";
-        this.contact.name = "John Doe";
-        this.contact.email = this.login.email;
-        this.showForm = true;
-        this.showLogin = false;
-      } else {
-        alert("Invalid credentials");
+    getRoomImage(imageName) {
+      try {
+        // Dynamically load image from src/assets
+        return require(`@/assets/images/room_images/${imageName}`);
+      } catch {
+        // Fallback image if not found
+        return require('@/assets/images/default.png');
       }
     },
-    submitContact() {
-      // Redirect to Confirmation page with query params
-      this.$router.push({
-        name: "Confirmation",
-        query: {
-          roomId: this.selectedRoom.id,
-          roomName: this.selectedRoom.name,
-          roomDesc: this.selectedRoom.description,
-          roomPrice: this.selectedRoom.price,
-          roomImage: this.selectedRoom.image,
+    async submitContact() {
+      try {
+        const response = await axios.post('http://localhost:8000/api/bookings', {
           title: this.contact.title,
           name: this.contact.name,
           email: this.contact.email,
-        },
-      });
+          room_id: this.selectedRoom.id,
+          price: this.selectedRoom.price,
+          check_in: this.contact.check_in,
+          check_out: this.contact.check_out
+        });
+        const bookingId = response.data.booking.id;
+        this.$router.push({
+          name: "Confirmation",
+          query: {
+            bookingId: bookingId,
+            roomId: this.selectedRoom.id,
+            roomName: this.selectedRoom.name,
+            roomDesc: this.selectedRoom.description,
+            roomPrice: this.selectedRoom.price,
+            roomImage: this.selectedRoom.image,
+            title: this.contact.title,
+            name: this.contact.name,
+            email: this.contact.email,
+            check_in: this.contact.check_in,
+            check_out: this.contact.check_out
+          },
+        });
+      } catch (error) {
+        console.error(error);
+        alert("Failed to save customer.");
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-.login-guest-options {
-  text-align: center;
-  margin: 40px 0;
+.contact-form {
+  margin: 3rem;
+  display: flex;
+  flex-direction: column;
 }
-.option-btn {
-  margin: 10px;
-  padding: 10px 20px;
-  font-size: 1rem;
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
   border-radius: 5px;
-  border: none;
+  border: 1px solid #ccc;
+}
+
+.submit-btn {
+  padding: 10px 20px;
+  font-weight: bold;
   background-color: #333;
-  color: #fff;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
-.option-btn:hover {
+
+.submit-btn:hover {
   background-color: #555;
 }
-.contact-form {
-  margin: 5rem !important;
+
+.room-summary {
+  margin: 3rem;
+}
+
+.room-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+}
+
+.room-image {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.room-info h3 {
+  margin: 10px 0 5px;
+}
+
+.room-dates {
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.room-dates p {
+  margin: 3px 0;
 }
 </style>
