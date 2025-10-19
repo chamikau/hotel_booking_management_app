@@ -45,6 +45,7 @@ export default {
       try {
         const response = await axios.post("http://localhost:8000/api/login", this.login);
 
+        localStorage.setItem("userEmail",  this.login.email);
         // Save token or user info if returned
         localStorage.setItem("token", response.data.token);
 

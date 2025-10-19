@@ -22,9 +22,9 @@
 
     <!-- Contact Form -->
     <section class="content">
-      <!-- Left: Contact Form -->
       <div class="contact-form">
         <form @submit.prevent="submitContact">
+          <!-- Title -->
           <div class="form-group">
             <label for="title">Title</label>
             <select id="title" v-model="contact.title" required>
@@ -34,26 +34,35 @@
               <option>Ms.</option>
               <option>Dr.</option>
             </select>
+            <span v-if="errors.title" class="error-msg">{{ errors.title }}</span>
           </div>
 
+          <!-- Name -->
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" v-model="contact.name" required />
+            <input type="text" id="name" v-model="contact.name" />
+            <span v-if="errors.name" class="error-msg">{{ errors.name }}</span>
           </div>
 
+          <!-- Email -->
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" v-model="contact.email" required />
+            <input type="email" id="email" v-model="contact.email" />
+            <span v-if="errors.email" class="error-msg">{{ errors.email }}</span>
           </div>
 
+          <!-- Check-in -->
           <div class="form-group">
             <label for="check_in">Check-in Date</label>
-            <input type="date" id="check_in" v-model="contact.check_in" required />
+            <input type="date" id="check_in" v-model="contact.check_in" />
+            <span v-if="errors.check_in" class="error-msg">{{ errors.check_in }}</span>
           </div>
 
+          <!-- Check-out -->
           <div class="form-group">
             <label for="check_out">Check-out Date</label>
-            <input type="date" id="check_out" v-model="contact.check_out" required />
+            <input type="date" id="check_out" v-model="contact.check_out" />
+            <span v-if="errors.check_out" class="error-msg">{{ errors.check_out }}</span>
           </div>
 
           <button type="submit" class="submit-btn">PROCEED</button>
@@ -74,7 +83,6 @@
             <p>{{ selectedRoom.description }}</p>
             <p class="room-price">LKR {{ selectedRoom.price }}/night</p>
 
-            <!-- Show Check-in & Check-out Dates -->
             <div v-if="contact.check_in && contact.check_out" class="room-dates">
               <p><strong>Check-in:</strong> {{ contact.check_in }}</p>
               <p><strong>Check-out:</strong> {{ contact.check_out }}</p>
@@ -87,7 +95,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "ContactInfo",
@@ -107,10 +115,10 @@ export default {
         price: null,
         image: "",
       },
+      errors: {}, // validation errors
     };
   },
   mounted() {
-    // Load selected room from router query
     this.selectedRoom = {
       id: this.$route.query.id,
       name: this.$route.query.name,
@@ -122,25 +130,57 @@ export default {
   methods: {
     getRoomImage(imageName) {
       try {
-        // Dynamically load image from src/assets
         return require(`@/assets/images/room_images/${imageName}`);
       } catch {
-        // Fallback image if not found
-        return require('@/assets/images/default.png');
+        return require("@/assets/images/default.png");
       }
     },
+    validateForm() {
+      this.errors = {};
+
+      if (!this.contact.title) {
+        this.errors.title = "Title is required";
+      }
+      if (!this.contact.name) {
+        this.errors.name = "Name is required";
+      }
+      if (!this.contact.email) {
+        this.errors.email = "Email is required";
+      } else if (!/\S+@\S+\.\S+/.test(this.contact.email)) {
+        this.errors.email = "Email is invalid";
+      }
+      if (!this.contact.check_in) {
+        this.errors.check_in = "Check-in date is required";
+      }
+      if (!this.contact.check_out) {
+        this.errors.check_out = "Check-out date is required";
+      }
+      if (
+          this.contact.check_in &&
+          this.contact.check_out &&
+          this.contact.check_out < this.contact.check_in
+      ) {
+        this.errors.check_out = "Check-out cannot be before check-in";
+      }
+
+      return Object.keys(this.errors).length === 0;
+    },
     async submitContact() {
+      if (!this.validateForm()) return;
+
       try {
-        const response = await axios.post('http://localhost:8000/api/bookings', {
+        const response = await axios.post("http://localhost:8000/api/bookings", {
           title: this.contact.title,
           name: this.contact.name,
           email: this.contact.email,
           room_id: this.selectedRoom.id,
           price: this.selectedRoom.price,
           check_in: this.contact.check_in,
-          check_out: this.contact.check_out
+          check_out: this.contact.check_out,
         });
+
         const bookingId = response.data.booking.id;
+
         this.$router.push({
           name: "Confirmation",
           query: {
@@ -154,12 +194,12 @@ export default {
             name: this.contact.name,
             email: this.contact.email,
             check_in: this.contact.check_in,
-            check_out: this.contact.check_out
+            check_out: this.contact.check_out,
           },
         });
       } catch (error) {
         console.error(error);
-        alert("Failed to save customer.");
+        alert("Failed to save booking.");
       }
     },
   },
@@ -183,11 +223,19 @@ label {
   display: block;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
+}
+
+.error-msg {
+  color: red;
+  font-size: 13px;
+  margin-top: 3px;
+  display: block;
 }
 
 .submit-btn {

@@ -57,6 +57,7 @@ export default {
       try {
         await axios.post('http://localhost:8000/api/register', this.user);
         alert("Registration successful!");
+        localStorage.setItem("userEmail", this.user.email);
         this.$router.push('/login'); // Redirect to login after successful registration
       } catch (error) {
         console.error(error);
