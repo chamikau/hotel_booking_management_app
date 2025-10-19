@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     searchRooms() {
-      // Navigate to Rooms.vue with search parameters
+      // Navigate to Room.vue with search parameters
       this.$router.push({
         name: "Rooms",
         query: {

@@ -1,13 +1,11 @@
 <template>
   <div class="dashboard-page">
-    <!-- Page Header -->
     <header class="dashboard-header">
       <h1>Welcome to Your Dashboard</h1>
       <p>Manage your bookings and account details here.</p>
       <button class="logout-btn" @click="logout">Logout</button>
     </header>
 
-    <!-- Quick Links / Actions -->
     <section class="dashboard-actions">
       <div class="action-card" @click="goToRooms">
         <h2>Book a Room</h2>
@@ -23,43 +21,81 @@
       </div>
     </section>
 
-    <!-- Recent Bookings -->
     <section class="recent-bookings">
       <h2>Recent Bookings</h2>
+
       <div v-if="bookings.length === 0" class="no-bookings">
         No recent bookings.
       </div>
-      <div v-else class="booking-card" v-for="booking in bookings" :key="booking.id">
-        <h3>{{ booking.roomName }}</h3>
-        <p><strong>Date:</strong> {{ booking.date }}</p>
-        <p><strong>Price:</strong> LKR {{ booking.price }}</p>
+
+      <div
+          v-else
+          class="booking-card"
+          v-for="booking in bookings"
+          :key="booking.id"
+      >
+        <!-- Room Image -->
+        <img
+            :src="getRoomImage(booking.room.image)"
+            alt="Room Image"
+            class="room-image"
+        />
+
+        <!-- Room Details -->
+        <div class="booking-details">
+          <h3>{{ booking.room.name }}</h3>
+          <p><strong>Check-in:</strong> {{ booking.check_in }}</p>
+          <p><strong>Check-out:</strong> {{ booking.check_out }}</p>
+          <p><strong>Guests:</strong> {{ booking.room.guests }}</p>
+          <p><strong>Price:</strong> LKR {{ booking.price }}</p>
+        </div>
       </div>
     </section>
+
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "UserDashboard",
   data() {
     return {
-      bookings: [
-        {
-          id: 1,
-          roomName: "Deluxe Room",
-          date: "2025-10-20 to 2025-10-22",
-          price: 240,
-        },
-        {
-          id: 2,
-          roomName: "Standard Room",
-          date: "2025-11-05 to 2025-11-07",
-          price: 160,
-        },
-      ],
+      bookings: [],
+      token: localStorage.getItem("token") || "",
+      userEmail: localStorage.getItem("userEmail") || "",
     };
   },
+  mounted() {
+    this.fetchRecentBookings();
+  },
   methods: {
+    getRoomImage(imageName) {
+      try {
+        // Dynamically load image from src/assets
+        return require(`@/assets/images/room_images/${imageName}`);
+      } catch {
+        // Fallback image if not found
+        return require('@/assets/images/default.png');
+      }
+    },
+    async fetchRecentBookings() {
+      try {
+        const response = await axios.get("http://localhost:8000/api/bookings/recent", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+          params: {
+            email: this.userEmail, // ✅ Send email here
+          },
+        });
+        this.bookings = response.data;
+      } catch (error) {
+        console.error(error);
+        alert("Failed to fetch bookings.");
+      }
+    },
     goToRooms() {
       this.$router.push({ name: "RoomSearch" });
     },
@@ -70,9 +106,9 @@ export default {
       alert("Go to profile page (not implemented yet).");
     },
     logout() {
-      // Clear auth (example: remove token, reset user data)
-      alert("You have been logged out.");
-      this.$router.push({name: "Login"}); // redirect to login page
+      localStorage.removeItem("token");
+      localStorage.removeItem("userEmail");
+      this.$router.push({ name: "RoomSearch" });
     },
   },
 };
@@ -103,5 +139,60 @@ export default {
   background-color: #555;
 }
 
-/* Keep existing dashboard styles from previous CSS */
+.recent-bookings {
+  margin-top: 30px;
+}
+
+.recent-bookings {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.booking-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.booking-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.room-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.booking-details {
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.booking-details h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.booking-details p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+}
+
+.booking-details p strong {
+  color: #222;
+}
+
 </style>

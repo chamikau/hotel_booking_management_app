@@ -27,58 +27,120 @@
     </div>
 
     <!-- Booking Summary -->
-    <div class="summary-card">
+    <div class="summary-card" v-if="booking">
       <h2>Room Details</h2>
       <div class="room-card">
-        <img :src="room.image" alt="Room Image" />
+        <img
+            :src="getRoomImage(booking.room.image)"
+            alt="Room Image"
+            class="room-image"
+        />
         <div class="room-info">
-          <h3>{{ room.name }}</h3>
-          <p>{{ room.description }}</p>
-          <p class="room-price">LKR {{ room.price }}/night</p>
+          <h3>{{ booking.room.name }}</h3>
+          <p>{{ booking.room.description }}</p>
+          <p class="room-price">LKR {{ booking.price }}/night</p>
+          <p><strong>Check-in:</strong> {{ booking.check_in }}</p>
+          <p><strong>Check-out:</strong> {{ booking.check_out }}</p>
         </div>
       </div>
 
       <h2>Contact Information</h2>
       <div class="contact-info">
-        <p><strong>Title:</strong> {{ contact.title }}</p>
-        <p><strong>Name:</strong> {{ contact.name }}</p>
-        <p><strong>Email:</strong> {{ contact.email }}</p>
-        <p><strong>Address:</strong> {{ contact.address }}</p>
+        <p><strong>Title:</strong> {{ booking.title }}</p>
+        <p><strong>Name:</strong> {{ booking.name }}</p>
+        <p><strong>Email:</strong> {{ booking.email }}</p>
       </div>
     </div>
 
-    <button @click="goDashboard" class="home-btn">Back to Dashboard</button>
+    <button @click="goLogin" class="home-btn">Back to Login</button>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Confirmation",
   data() {
     return {
-      room: {
-        id: this.$route.query.roomId || 1,
-        name: "Deluxe Room",
-        description: "Spacious room with sea view and king-size bed.",
-        price: 120,
-        image: "/assets/rooms/room1.jpg",
-      },
-      contact: {
-        title: this.$route.query.title || "Mr.",
-        name: this.$route.query.name || "John Doe",
-        email: this.$route.query.email || "john@example.com",
-        address: this.$route.query.address || "123 Street, City",
-      },
+      booking: null,
+      token: localStorage.getItem("token") || "",
+      bookingId: this.$route.query.bookingId || null,
     };
   },
+  mounted() {
+    if (this.bookingId) {
+      this.fetchBooking();
+    } else {
+      alert("Booking ID not found");
+    }
+  },
   methods: {
-    goDashboard() {
-      this.$router.push({ name: "UserDashboard" });
+    async fetchBooking() {
+      try {
+        const response = await axios.get(
+            `http://localhost:8000/api/bookings/${this.bookingId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${this.token}`,
+              },
+            }
+        );
+        this.booking = response.data;
+      } catch (error) {
+        console.error(error);
+        alert("Failed to fetch booking details.");
+      }
+    },
+    getRoomImage(imageName) {
+      try {
+        return require(`@/assets/images/room_images/${imageName}`);
+      } catch {
+        return require("@/assets/images/default.png");
+      }
+    },
+    goLogin() {
+      this.$router.push({ name: "Login" });
     },
   },
 };
 </script>
 
 <style scoped>
+.summary-card {
+  margin: 2rem auto;
+  max-width: 600px;
+}
+.room-card {
+  display: flex;
+  gap: 15px;
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.room-image {
+  width: 150px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.room-info h3 {
+  margin: 0 0 5px 0;
+}
+.contact-info p {
+  margin: 3px 0;
+}
+.home-btn {
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.home-btn:hover {
+  background-color: #555;
+}
 </style>
