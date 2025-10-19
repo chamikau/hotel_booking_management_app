@@ -82,7 +82,8 @@ export default {
     },
     async fetchFilteredRooms() {
       try {
-        const response = await axios.get("http://localhost:8000/api/rooms", {
+        const API_URL = "https://hotel-booking-backend.up.railway.app/api";
+        const response = await axios.get(`${API_URL}/api/rooms`, {
           params: this.filters,
         });
         this.rooms = response.data;

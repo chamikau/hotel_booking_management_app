@@ -43,7 +43,8 @@ export default {
   methods: {
     async loginUser() {
       try {
-        const response = await axios.post("http://localhost:8000/api/login", this.login);
+        const API_URL = "https://hotel-booking-backend.up.railway.app/api";
+        const response = await axios.post(`${API_URL}/api/login`, this.login);
 
         localStorage.setItem("userEmail",  this.login.email);
         // Save token or user info if returned

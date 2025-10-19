@@ -82,7 +82,8 @@ export default {
     },
     async fetchRecentBookings() {
       try {
-        const response = await axios.get("http://localhost:8000/api/bookings/recent", {
+        const API_URL = "https://hotel-booking-backend.up.railway.app/api";
+        const response = await axios.get(`${API_URL}/bookings/recent`, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
