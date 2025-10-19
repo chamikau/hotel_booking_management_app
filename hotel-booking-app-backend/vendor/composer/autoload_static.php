@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc61ff82cbf0142a401a48a8161e1595a
+class ComposerStaticInit80bc142083f02a7a0990ea747444b2f4
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -318,8 +318,8 @@ class ComposerStaticInitc61ff82cbf0142a401a48a8161e1595a
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -644,7 +644,6 @@ class ComposerStaticInitc61ff82cbf0142a401a48a8161e1595a
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
-        'Database\\Seeders\\RoomSeeder' => __DIR__ . '/../..' . '/database/seeders/RoomSeeder.php',
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
         'DeepCopy\\Exception\\CloneException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/CloneException.php',
         'DeepCopy\\Exception\\PropertyException' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/Exception/PropertyException.php',
@@ -5535,9 +5534,9 @@ class ComposerStaticInitc61ff82cbf0142a401a48a8161e1595a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc61ff82cbf0142a401a48a8161e1595a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc61ff82cbf0142a401a48a8161e1595a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc61ff82cbf0142a401a48a8161e1595a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit80bc142083f02a7a0990ea747444b2f4::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit80bc142083f02a7a0990ea747444b2f4::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit80bc142083f02a7a0990ea747444b2f4::$classMap;
 
         }, null, ClassLoader::class);
     }
