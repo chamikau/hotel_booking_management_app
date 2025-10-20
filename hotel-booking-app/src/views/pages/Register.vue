@@ -55,7 +55,7 @@ export default {
     async registerUser()
     {
       try {
-        const API_URL = "https://hotel-booking-backend.up.railway.app/api";
+        const API_URL = "https://hotelbookingmanagementapp-production.up.railway.app";
         await axios.post(`${API_URL}/api/register`, this.user);
         alert("Registration successful!");
         localStorage.setItem("userEmail", this.user.email);
