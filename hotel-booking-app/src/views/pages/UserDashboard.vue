@@ -92,6 +92,7 @@ export default {
           },
         });
         this.bookings = response.data;
+
       } catch (error) {
         console.error(error);
         alert("Failed to fetch bookings.");
