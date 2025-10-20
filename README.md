@@ -15,6 +15,7 @@ git pull origin develop
 **step 01**	
 
 cd hotel-booking-app-backend
+	
 **step 02**
 	
 composer install
