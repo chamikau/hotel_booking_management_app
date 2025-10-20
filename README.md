@@ -11,25 +11,38 @@ git checkout develop
 git pull origin develop
 
 **Backend Setup (Laravel)**
+	
+**step 01**	
 
-**step 01**
 cd hotel-booking-app-backend
 **step 02**
+	
 composer install
-**step 03**
+	
+**step 03**	
+	
 cp .env.example .env
+	
 **step 04**
+	
 php artisan migrate --seed
+	
 **step 05**
+	
 php artisan serve
 
 **Frontend Setup (Vue.js)**
 
-**step 01**
+**step 01**	
+	
 cd hotel-booking-app-frontend
+	
 **step 02**
+	
 npm install
+	
 **step 03**
+	
 npm run serve
 
 
