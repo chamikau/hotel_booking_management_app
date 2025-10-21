@@ -79,7 +79,7 @@ export default {
   methods: {
     async fetchBooking() {
       try {
-        const API_URL = "https://hotelbookingmanagementapp-production.up.railway.app";
+        const API_URL = "https://hotel_booking_management_app.railway.internal";
         const response = await axios.get(
             `${API_URL}/bookings/${this.bookingId}`,
             {

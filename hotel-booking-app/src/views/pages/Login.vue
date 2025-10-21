@@ -43,7 +43,7 @@ export default {
   methods: {
     async loginUser() {
       try {
-        const API_URL = "https://hotelbookingmanagementapp-production.up.railway.app";
+        const API_URL = "https://hotel_booking_management_app.railway.internal";
         const response = await axios.post(`${API_URL}/api/login`, this.login);
 
         localStorage.setItem("userEmail",  this.login.email);

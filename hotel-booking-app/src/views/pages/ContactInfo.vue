@@ -169,7 +169,7 @@ export default {
       if (!this.validateForm()) return;
 
       try {
-        const API_URL = "https://hotelbookingmanagementapp-production.up.railway.app";
+        const API_URL = "https://hotel_booking_management_app.railway.internal";
         const response = await axios.post(`${API_URL}/api/bookings`, {
           title: this.contact.title,
           name: this.contact.name,
